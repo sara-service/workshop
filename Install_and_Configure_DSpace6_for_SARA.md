@@ -32,7 +32,7 @@ git clone https://github.com/sara-service/workshop.git
 
 ```bash
 sudo apt-get update && sudo apt-get -y upgrade
-sudo apt-get -y install python openjdk-8-jdk maven ant postgresql postgresql-contrib curl wget haveged
+sudo apt-get -y install python openjdk-8-jdk maven ant postgresql postgresql-contrib curl wget haveged ruby-compass ruby-sass
 ```
 
 ### Postgres
@@ -52,8 +52,8 @@ sudo -u postgres psql dspace -c "CREATE EXTENSION pgcrypto;"
 wget http://archive.apache.org/dist/tomcat/tomcat-8/v8.5.32/bin/apache-tomcat-8.5.32.tar.gz -O /tmp/tomcat.tgz
 sudo mkdir /opt/tomcat
 sudo tar xzvf /tmp/tomcat.tgz -C /opt/tomcat --strip-components=1
-sudo cp /home/ubuntu/DSpace-Setup/config/tomcat/tomcat.service /etc/systemd/system/tomcat.service
-sudo cp /home/ubuntu/DSpace-Setup/config/tomcat/server.xml /opt/tomcat/conf/server.xml
+sudo cp /home/ubuntu/workshop/DSpace/config/tomcat/tomcat.service /etc/systemd/system/tomcat.service
+sudo cp /home/ubuntu/workshop/DSpace/config/tomcat/server.xml /opt/tomcat/conf/server.xml
 sudo chown -R dspace.dspace /opt/tomcat
 sudo systemctl daemon-reload
 sudo systemctl start tomcat
@@ -62,10 +62,17 @@ sudo systemctl start tomcat
 Now you should be able to find your tomcat running at http://dspace6-test.sara-service.org:8080
 
 ### DSpace
-
 ```bash
-wget https://github.com/DSpace/DSpace/releases/download/dspace-6.3/dspace-6.3-src-release.tar.gz -O /tmp/dspace.tgz
-sudo -u dspace tar -xzvf /tmp/dspace.tgz -C /tmp
+# install mirage2 deps locally
+sudo -H -u dspace sh -c 'wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash'
+sudo -H -u dspace bash -c 'export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.sh" && nvm install v8'
+sudo -H -u dspace bash -c 'export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.sh" && npm install -g bower grunt grunt-cli'
+```
+```bash
+wget https://github.com/DSpace/DSpace/releases/download/dspace-6.3/dspace-6.3-src-release.tar.gz -O /tmp/dspace-src.tgz
+mkdir -p /tmp/dspace-src
+tar -xzvf /tmp/dspace-src.tgz -C /tmp/dspace-src --strip-components=1
+sudo chown -R dspace:dspace /tmp/dspace-src 
 ```
 ```bash
 sudo mkdir /dspace
@@ -74,8 +81,8 @@ sudo chgrp dspace /dspace
 ```
 ```bash
 # NOTE needs sudo interactive or else build fails for Mirage2(xmlui)
-sudo -H -u dspace sh -c 'cd /tmp/dspace-6.3-src-release && mvn -e package -Dmirage2.on=true'
-sudo -H -u dspace -- sh -c 'cd /tmp/dspace-6.3-src-release/dspace/target/dspace-installer; ant fresh_install'
+sudo -H -u dspace bash -c 'export GEM_HOME=/var/lib/gems/2.5.0 && export GEM_PATH=/var/lib/gems/2.5.0 && export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.sh" && cd /tmp/dspace-src && mvn -e clean package -Dmirage2.on=true -Dmirage2.deps.included=false'
+sudo -H -u dspace -- sh -c 'cd /tmp/dspace-src/dspace/target/dspace-installer; ant fresh_install'
 ```
 ```bash
 # export admins email = it is used by the script to create the bibliography, too
