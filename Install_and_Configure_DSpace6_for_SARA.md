@@ -69,8 +69,10 @@ sudo -H -u dspace bash -c 'export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.s
 sudo -H -u dspace bash -c 'export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.sh" && npm install -g bower grunt grunt-cli'
 ```
 ```bash
-wget https://github.com/DSpace/DSpace/releases/download/dspace-6.3/dspace-6.3-src-release.tar.gz -O /tmp/dspace.tgz
-sudo -u dspace tar -xzvf /tmp/dspace.tgz -C /tmp
+wget https://github.com/DSpace/DSpace/releases/download/dspace-6.3/dspace-6.3-src-release.tar.gz -O /tmp/dspace-src.tgz
+mkdir -p /tmp/dspace-src
+tar -xzvf /tmp/dspace-src.tgz -C /tmp/dspace-src --strip-components=1
+sudo chown -R dspace:dspace /tmp/dspace-src 
 ```
 ```bash
 sudo mkdir /dspace
