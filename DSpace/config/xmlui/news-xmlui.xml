@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<document xmlns="http://di.tamu.edu/DRI/1.0/" xmlns:i18n="http://apache.org/cocoon/i18n/2.1" version="1.1">
+      <body>
+        <div id="file.news.div.news" n="news" rend="primary">
+		  <head><i18n:text>myuni.repo.title</i18n:text></head>
+          <p>
+            <i18n:text>myuni.repo.intro</i18n:text>
+            <!-- <i18n:text>myuni.repo.a.service.of</i18n:text>
+            <xref target="http://myuni.edu/"><i18n:text>myuni.name</i18n:text></xref>
+			-->
+          </p>
+		</div>
+      </body>
+      <options/>
+      <meta>
+        <userMeta/>
+        <pageMeta/>
+        <repositoryMeta/>
+      </meta>
+</document>
