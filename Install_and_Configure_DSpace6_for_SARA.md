@@ -22,7 +22,7 @@ In case of questions please contact:
 ssh ubuntu@HOSTNAME
 
 ## Get Resources
-git clone -n DSpcMtg_Bamberg https://git.uni-konstanz.de/sara/workshop.git
+git clone https://github.com/sara-service/workshop.git
 
 ## Installation
 
