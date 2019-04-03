@@ -32,7 +32,7 @@ git clone https://github.com/sara-service/workshop.git
 
 ```bash
 sudo apt-get update && sudo apt-get -y upgrade
-sudo apt-get -y install python openjdk-8-jdk maven ant postgresql postgresql-contrib curl wget haveged
+sudo apt-get -y install python openjdk-8-jdk maven ant postgresql postgresql-contrib curl wget haveged ruby-compass ruby-sass
 ```
 
 ### Postgres
@@ -62,7 +62,12 @@ sudo systemctl start tomcat
 Now you should be able to find your tomcat running at http://dspace6-test.sara-service.org:8080
 
 ### DSpace
-
+```bash
+# install mirage2 deps locally
+sudo -H -u dspace sh -c 'wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash'
+sudo -H -u dspace bash -c 'export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.sh" && nvm install v8'
+sudo -H -u dspace bash -c 'export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.sh" && npm install -g bower grunt grunt-cli'
+```
 ```bash
 wget https://github.com/DSpace/DSpace/releases/download/dspace-6.3/dspace-6.3-src-release.tar.gz -O /tmp/dspace.tgz
 sudo -u dspace tar -xzvf /tmp/dspace.tgz -C /tmp
