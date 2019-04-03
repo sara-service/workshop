@@ -79,7 +79,7 @@ sudo chgrp dspace /dspace
 ```
 ```bash
 # NOTE needs sudo interactive or else build fails for Mirage2(xmlui)
-sudo -H -u dspace sh -c 'cd /tmp/dspace-6.3-src-release && mvn -e package -Dmirage2.on=true'
+sudo -H -u dspace bash -c 'export GEM_HOME=/var/lib/gems/2.5.0 && export GEM_PATH=/var/lib/gems/2.5.0 && export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.sh" && cd /tmp/dspace-src && mvn -e clean package -Dmirage2.on=true -Dmirage2.deps.included=false'
 sudo -H -u dspace -- sh -c 'cd /tmp/dspace-6.3-src-release/dspace/target/dspace-installer; ant fresh_install'
 ```
 ```bash
