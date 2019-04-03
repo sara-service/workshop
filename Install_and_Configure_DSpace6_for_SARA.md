@@ -1,4 +1,4 @@
-# Install & Configure DSpace6 for SARA using bwCloud Scope
+# Install & Configure DSpace6 for SARA using bwCloud
 
 ## Intro
 
