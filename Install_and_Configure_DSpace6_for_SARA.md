@@ -19,10 +19,14 @@ In case of questions please contact:
 ## Setup 
 
 ### Connect to the machine using your credentials (ssh, putty)
+```bash
 ssh ubuntu@HOSTNAME
+```
 
 ## Get Resources
+```bash
 git clone https://github.com/sara-service/workshop.git
+```
 
 ## Installation
 
