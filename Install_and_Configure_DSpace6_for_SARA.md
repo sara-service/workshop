@@ -59,7 +59,7 @@ sudo systemctl daemon-reload
 sudo systemctl start tomcat
 ```
 
-Now you should be able to find your tomcat running at http://dspace6-test.sara-service.org:8080
+Now you should be able to find your tomcat running under http://vm-XXX-XXX.bwcloud.uni-ulm.de:8080
 
 ### DSpace
 ```bash
@@ -130,7 +130,7 @@ sudo systemctl enable tomcat
 ```
 
 ### Test your instance
-Please visit a web page of the DSpace server: http://dspace6-test.sara-service.org:8080/xmlui
+Please visit a web page of the DSpace server: http://vm-XXX-XXX.bwcloud.uni-ulm.de:8080/xmlui
 You should be able to login with your admin account.
 
 ## Configuration
@@ -181,7 +181,7 @@ sudo a2enmod ssl proxy proxy_http proxy_ajp
 sudo systemctl restart apache2
 ```
 
-Now you will see the standard apache index page: http://dspace6-test.sara-service.org
+Now you will see the standard apache index page: http://vm-XXX-XXX.bwcloud.uni-ulm.de
 
 ### Install letsencrypt, create and configure SSL cert
 ```bash
@@ -189,7 +189,7 @@ sudo apt -y install python3-certbot-apache
 sudo systemctl stop apache2
 sudo letsencrypt --authenticator standalone --installer apache --domains $(hostname)
 ```
-Choose `secure redirect` . Now you should be able to access via https only: http://dspace6-test.sara-service.org
+Choose `secure redirect` . Now you should be able to access via https only: http://vm-XXX-XXX.bwcloud.uni-ulm.de
 
 ### Configure apache httpd
 First stop tomcat:
