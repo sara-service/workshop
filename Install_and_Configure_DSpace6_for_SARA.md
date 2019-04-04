@@ -90,8 +90,7 @@ sudo -H -u dspace bash -c 'export GEM_HOME=/var/lib/gems/2.5.0 && export GEM_PAT
 sudo -H -u dspace -- sh -c 'cd /tmp/dspace-src/dspace/target/dspace-installer; ant fresh_install'
 ```
 ```bash
-# export admins email = it is used by the script to create the bibliography, too
-export ADMIN_EMAIL="dspace-admin@notexisting.com"
+ADMIN_EMAIL="dspace-admin@notexisting.com" # will be needed later again...
 # Create dspace admin
 sudo -u dspace /dspace/bin/dspace create-administrator -e $ADMIN_EMAIL -f "Super" -l "User" -p "iamthebest" -c en
 ```
