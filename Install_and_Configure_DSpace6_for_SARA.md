@@ -3,7 +3,7 @@
 ## Intro
 
 This manual provides a step-by-step setup for a fully configured instance of DSpace6 server. 
-The final instance can be used as institutional repository to receive automated deposit from SARA Service via swordv2.
+The final instance can be used as institutional repository to receive automated deposits from SARA Service via swordv2.
 
 Further reading:
 https://wiki.duraspace.org/display/DSDOC6x/DSpace+6.x+Documentation
@@ -36,7 +36,8 @@ git clone https://github.com/sara-service/workshop.git
 
 ```bash
 sudo apt-get update && sudo apt-get -y upgrade
-sudo apt-get -y install python openjdk-8-jdk maven ant postgresql postgresql-contrib curl wget haveged ruby-compass ruby-sass
+sudo apt-get -y install openjdk-8-jdk maven ant postgresql postgresql-contrib curl wget haveged ruby-compass ruby-sass
+sudo apt-get remove -y openjdk-11-jre-headless # do NOT install java 11
 ```
 
 ### Postgres
@@ -56,8 +57,8 @@ sudo -u postgres psql dspace -c "CREATE EXTENSION pgcrypto;"
 wget http://archive.apache.org/dist/tomcat/tomcat-8/v8.5.32/bin/apache-tomcat-8.5.32.tar.gz -O /tmp/tomcat.tgz
 sudo mkdir /opt/tomcat
 sudo tar xzvf /tmp/tomcat.tgz -C /opt/tomcat --strip-components=1
-sudo cp /home/ubuntu/workshop/DSpace/config/tomcat/tomcat.service /etc/systemd/system/tomcat.service
-sudo cp /home/ubuntu/workshop/DSpace/config/tomcat/server.xml /opt/tomcat/conf/server.xml
+sudo cp ~/workshop/DSpace/config/tomcat/tomcat.service /etc/systemd/system/tomcat.service
+sudo cp ~/workshop/DSpace/config/tomcat/server.xml /opt/tomcat/conf/server.xml
 sudo chown -R dspace.dspace /opt/tomcat
 sudo systemctl daemon-reload
 sudo systemctl start tomcat
@@ -89,8 +90,7 @@ sudo -H -u dspace bash -c 'export GEM_HOME=/var/lib/gems/2.5.0 && export GEM_PAT
 sudo -H -u dspace -- sh -c 'cd /tmp/dspace-src/dspace/target/dspace-installer; ant fresh_install'
 ```
 ```bash
-# export admins email = it is used by the script to create the bibliography, too
-export ADMIN_EMAIL="dspace-admin@notexisting.com"
+ADMIN_EMAIL="dspace-admin@notexisting.com" # will be needed later again...
 # Create dspace admin
 sudo -u dspace /dspace/bin/dspace create-administrator -e $ADMIN_EMAIL -f "Super" -l "User" -p "iamthebest" -c en
 ```
@@ -99,29 +99,29 @@ sudo -u dspace /dspace/bin/dspace create-administrator -e $ADMIN_EMAIL -f "Super
 
 ```bash
 # Enable Mirage2 Themes
-cat /home/ubuntu/workshop/DSpace/config/xmlui.xconf             | sudo -u dspace sh -c 'cat > /dspace/config/xmlui.xconf'
+cat ~/workshop/DSpace/config/xmlui.xconf             | sudo -u dspace sh -c 'cat > /dspace/config/xmlui.xconf'
 # Apply customized item submission form
-cat /home/ubuntu/workshop/DSpace/config/item-submission.xml     | sudo -u dspace sh -c 'cat > /dspace/config/item-submission.xml'
-cat /home/ubuntu/workshop/DSpace/config/input-forms.xml         | sudo -u dspace sh -c 'cat > /dspace/config/input-forms.xml'
+cat ~/workshop/DSpace/config/item-submission.xml     | sudo -u dspace sh -c 'cat > /dspace/config/item-submission.xml'
+cat ~/workshop/DSpace/config/input-forms.xml         | sudo -u dspace sh -c 'cat > /dspace/config/input-forms.xml'
 # Custom item view
-cat /home/ubuntu/workshop/DSpace/config/xmlui/item-view.xsl     | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/themes/Mirage2/xsl/aspect/artifactbrowser/item-view.xsl'
+cat ~/workshop/DSpace/config/xmlui/item-view.xsl     | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/themes/Mirage2/xsl/aspect/artifactbrowser/item-view.xsl'
 # Custom messages
-cat /home/ubuntu/workshop/DSpace/config/xmlui/messages.xml      | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/i18n/messages.xml'
-cat /home/ubuntu/workshop/DSpace/config/xmlui/messages_de.xml   | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/i18n/messages_de.xml'
+cat ~/workshop/DSpace/config/xmlui/messages.xml      | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/i18n/messages.xml'
+cat ~/workshop/DSpace/config/xmlui/messages_de.xml   | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/i18n/messages_de.xml'
 # Custom landing page
-cat /home/ubuntu/workshop/DSpace/config/xmlui/news-xmlui.xml    | sudo -u dspace sh -c 'cat > /dspace/config/news-xmlui.xml'
+cat ~/workshop/DSpace/config/xmlui/news-xmlui.xml    | sudo -u dspace sh -c 'cat > /dspace/config/news-xmlui.xml'
 # Custom thumbnails
-cat /home/ubuntu/workshop/DSpace/config/xmlui/Logo_SARA_RGB.png | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/themes/Mirage2/images/Logo_SARA_RGB.png'
+cat ~/workshop/DSpace/config/xmlui/Logo_SARA_RGB.png | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/themes/Mirage2/images/Logo_SARA_RGB.png'
 # Custom icons
-cat /home/ubuntu/workshop/DSpace/config/xmlui/arrow.png         | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/themes/Mirage2/images/arrow.png'
+cat ~/workshop/DSpace/config/xmlui/arrow.png         | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/themes/Mirage2/images/arrow.png'
 # Copy email templates
-sudo cp /home/ubuntu/workshop/DSpace/config/emails/* /dspace/config/emails/
+sudo cp ~/workshop/DSpace/config/emails/* /dspace/config/emails/
 sudo chown -R dspace /dspace/config/emails
 sudo chgrp -R dspace /dspace/config/emails
 # Apply custom local configurations
-cat /home/ubuntu/workshop/DSpace/config/local.cfg | sed 's/devel-dspace.sara-service.org/'$(hostname)'/g' | sudo -u dspace tee /dspace/config/local.cfg
+cat ~/workshop/DSpace/config/local.cfg | sed 's/devel-dspace.sara-service.org/'$(hostname)'/g' | sudo -u dspace tee /dspace/config/local.cfg
 # Apply default deposit license
-cat /home/ubuntu/workshop/DSpace/config/default.license | sudo -u dspace tee /dspace/config/default.license
+cat ~/workshop/DSpace/config/default.license | sudo -u dspace tee /dspace/config/default.license
 ```
 ```bash
 # Copy all webapps from dspace to tomcat
@@ -134,6 +134,9 @@ sudo systemctl enable tomcat
 ```
 
 ### Test your instance
+```bash
+hostname # this is your DSpace hostname!
+```
 Open the start page of your DSpace server: http://vm-XXX-XXX.bwcloud.uni-ulm.de:8080/xmlui
 You should be able to login with your admin account.
 
@@ -174,7 +177,7 @@ After that, we need to create groups and configure permissions. You will need to
 
 <sup>*</sup>this is the dedicated SARA Service user and needs to have permissions to submit to any collection a SARA user has access to! You can even use a non-existing email address since you are admin.
 
-### Validate Swordv2/Rest functionality (HTTP)
+### Validate Swordv2 functionality (HTTP)
 
 Now we check whether the Sword Interface is configured properly and a valid ServiceDocument is being delivered.
 We distinguish three cases
@@ -194,11 +197,6 @@ USER3="daniel.duesentrieb@entenhausen.de" # set nonexisting user
 curl -H "on-behalf-of: $USER1" -i $DSPACE_SERVER/swordv2/servicedocument --user "$SARA_USER:$SARA_PWD"  # => downloads TermsOfServices for all available collections
 curl -H "on-behalf-of: $USER2" -i $DSPACE_SERVER/swordv2/servicedocument --user "$SARA_USER:$SARA_PWD"  # => downloads empty service document
 curl -H "on-behalf-of: $USER3" -i $DSPACE_SERVER/swordv2/servicedocument --user "$SARA_USER:$SARA_PWD"  # => HTML Error Status 403: Forbidden
-```
-
-```bash
-curl -s -H "Accept: application/json" $DSPACE_SERVER/rest/hierarchy | python -m json.tool
-# This should dump the bibliography structure. In case of `No JSON object could be decoded` something is wrong.
 ```
 
 ### Install apache httpd
@@ -255,7 +253,7 @@ sudo sed -i 's#dspace.baseUrl = http://${dspace.hostname}:8080#dspace.baseUrl = 
 sudo service tomcat restart
 ```
 
-### Validate Swordv2/Rest functionality (HTTPS)
+### Validate Swordv2 functionality (HTTPS)
 
 Experience shows that many things can break while setting up apache+SSL hence we will repeat the previous checks.
 
@@ -271,8 +269,4 @@ USER3="daniel.duesentrieb@uni-entenhausen.de" # set nonexisting user
 curl -H "on-behalf-of: $USER1" -i $DSPACE_SERVER/swordv2/servicedocument --user "$SARA_USER:$SARA_PWD"  # => downloads TermsOfServices for all available collections
 curl -H "on-behalf-of: $USER2" -i $DSPACE_SERVER/swordv2/servicedocument --user "$SARA_USER:$SARA_PWD"  # => downloads empty service document
 curl -H "on-behalf-of: $USER3" -i $DSPACE_SERVER/swordv2/servicedocument --user "$SARA_USER:$SARA_PWD"  # => HTML Error Status 403: Forbidden
-```
-```bash
-curl -s -H "Accept: application/json" $DSPACE_SERVER/rest/hierarchy | python -m json.tool
-# This should dump the bibliography structure. In case of `No JSON object could be decoded` something is wrong.
 ```
