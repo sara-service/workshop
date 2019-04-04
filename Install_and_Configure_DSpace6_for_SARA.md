@@ -180,10 +180,10 @@ After that, we need to create groups and configure permissions. You will need to
 ### Validate Swordv2 functionality (HTTP)
 
 Now we check whether the Sword Interface is configured properly and a valid ServiceDocument is being delivered.
-We distinguish three cases
-*USER1* is registered and has access to at least one collection
-*USER2* is registered but has no access to any collection
-*USER3* is not registered at all
+We distinguish three cases:
+* *USER1* is registered and has access to at least one collection
+* *USER2* is registered but has no access to any collection
+* *USER3* is not registered at all
 
 ```bash
 DSPACE_SERVER="$(hostname):8080"
