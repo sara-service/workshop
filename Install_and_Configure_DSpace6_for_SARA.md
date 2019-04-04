@@ -3,7 +3,7 @@
 ## Intro
 
 This manual provides a step-by-step setup for a fully configured instance of DSpace6 server. 
-The final instance can be used as institutional repository to receive automated deposit from SARA Service via swordv2.
+The final instance can be used as institutional repository to receive automated deposits from SARA Service via swordv2.
 
 Further reading:
 https://wiki.duraspace.org/display/DSDOC6x/DSpace+6.x+Documentation
