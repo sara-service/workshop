@@ -174,7 +174,7 @@ After that, we need to create groups and configure permissions. You will need to
 
 <sup>*</sup>this is the dedicated SARA Service user and needs to have permissions to submit to any collection a SARA user has access to! You can even use a non-existing email address since you are admin.
 
-### Validate Swordv2/Rest functionality (HTTP)
+### Validate Swordv2 functionality (HTTP)
 
 Now we check whether the Sword Interface is configured properly and a valid ServiceDocument is being delivered.
 We distinguish three cases
@@ -194,11 +194,6 @@ USER3="daniel.duesentrieb@entenhausen.de" # set nonexisting user
 curl -H "on-behalf-of: $USER1" -i $DSPACE_SERVER/swordv2/servicedocument --user "$SARA_USER:$SARA_PWD"  # => downloads TermsOfServices for all available collections
 curl -H "on-behalf-of: $USER2" -i $DSPACE_SERVER/swordv2/servicedocument --user "$SARA_USER:$SARA_PWD"  # => downloads empty service document
 curl -H "on-behalf-of: $USER3" -i $DSPACE_SERVER/swordv2/servicedocument --user "$SARA_USER:$SARA_PWD"  # => HTML Error Status 403: Forbidden
-```
-
-```bash
-curl -s -H "Accept: application/json" $DSPACE_SERVER/rest/hierarchy | python -m json.tool
-# This should dump the bibliography structure. In case of `No JSON object could be decoded` something is wrong.
 ```
 
 ### Install apache httpd
@@ -255,7 +250,7 @@ sudo sed -i 's#dspace.baseUrl = http://${dspace.hostname}:8080#dspace.baseUrl = 
 sudo service tomcat restart
 ```
 
-### Validate Swordv2/Rest functionality (HTTPS)
+### Validate Swordv2 functionality (HTTPS)
 
 Experience shows that many things can break while setting up apache+SSL hence we will repeat the previous checks.
 
@@ -271,8 +266,4 @@ USER3="daniel.duesentrieb@uni-entenhausen.de" # set nonexisting user
 curl -H "on-behalf-of: $USER1" -i $DSPACE_SERVER/swordv2/servicedocument --user "$SARA_USER:$SARA_PWD"  # => downloads TermsOfServices for all available collections
 curl -H "on-behalf-of: $USER2" -i $DSPACE_SERVER/swordv2/servicedocument --user "$SARA_USER:$SARA_PWD"  # => downloads empty service document
 curl -H "on-behalf-of: $USER3" -i $DSPACE_SERVER/swordv2/servicedocument --user "$SARA_USER:$SARA_PWD"  # => HTML Error Status 403: Forbidden
-```
-```bash
-curl -s -H "Accept: application/json" $DSPACE_SERVER/rest/hierarchy | python -m json.tool
-# This should dump the bibliography structure. In case of `No JSON object could be decoded` something is wrong.
 ```
