@@ -145,13 +145,6 @@ You should be able to login with your admin account.
 ### Create an initial configuration
 
 First we will create a sample bibliography:
-
-        Faculty of Education
-                -> Publications
-                -> Research Data
-        Faculty of Science and Technology
-                -> Publications
-                -> Research Data
                 
 ```bash
 sudo -u dspace /dspace/bin/dspace structure-builder -f ~/workshop/DSpace/config/DSpace_Import_Structure.xml -o /tmp/DSpace_Export_Structure.xml -e "$ADMIN_EMAIL"
