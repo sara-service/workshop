@@ -140,17 +140,24 @@ You should be able to login with your admin account.
 ## Configuration
 
 ### Create an initial configuration
-Now create a bunch of default users and a community/collection structure:
+
+Now we will create a service user dedicated to SARA<sup>*</sup>
 ```bash
-cd /home/ubuntu/DSpace-Setup && ./dspace-init.sh
+sudo /dspace/bin/dspace user --add --email project-sara@uni-konstanz.de --password SaraTest --givenname SARA --surname ServiceUser
 ```
-After that, we need to configure permissions. You will need to login as admin using the DSpace UI: 
-* create a group called `SARA User` and add `project-sara@uni-konstanz.de`<sup>*</sup>
-* create a group called `DSpace User` and add some users. 
-* for each collection: 
-  * allow submissions for `DSpace User`
-  * if `Research Data`: allow submissions for `SARA User`
-  * Add a role -> `Accept/Reject/Edit Metadata Step` -> add `Reviewer`
+
+...and two demo users
+```bash
+sudo /dspace/bin/dspace user --add --email demo-user@sara-service.org --password SaraTest --givenname Demo --surname User
+sudo /dspace/bin/dspace user --add --email demo-user-noaccess@sara-service.org --password SaraTest --givenname Demo --surname Loser
+```
+
+After that, we need to create groups and configure permissions. You will need to login as admin using the DSpace UI: 
+* create a group called `SARA User` and add `project-sara@uni-konstanz.de`
+* create a group called `DSpace User` and add `demo-user@sara-service.org`
+* for the two `Research Data` collections allow submissions for both `DSpace User` and `SARA User`
+* for one `Publication` collection allow submissions for `DSpace User` only
+* for the other `Publication` collection allow submissions for `SARA User` only
 
 <sup>*</sup>this is the dedicated SARA Service user and needs to have permissions to submit to any collection a SARA user has access to! You can even use a non-existing email address since you are admin.
 
@@ -167,7 +174,7 @@ DSPACE_SERVER="$(hostname):8080"
 
 SARA_USER="project-sara@uni-konstanz.de"
 SARA_PWD="SaraTest"
-USER1="demo-user@uni-ulm.de" # set existing SARA User
+USER1="demo-user@sara-service.org" # set existing SARA User
 USER2="demo-user-noaccess@sara-service.org" # set existing user without any permissions
 USER3="daniel.duesentrieb@entenhausen.de" # set nonexisting user
 
