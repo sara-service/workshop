@@ -150,7 +150,10 @@ First we will create a sample bibliography:
 sudo -u dspace /dspace/bin/dspace structure-builder -f ~/workshop/DSpace/config/DSpace_Import_Structure.xml -o /tmp/DSpace_Export_Structure.xml -e "$ADMIN_EMAIL"
 ```
 
-Now we will create a service user dedicated to SARA<sup>*</sup>
+Now we will create a service user dedicated to SARA.
+This user restrains the collections a SARA user will have access to! 
+You can even use a non-existing email address here since you are admin.
+
 ```bash
 sudo /dspace/bin/dspace user --add --email project-sara@uni-konstanz.de --password SaraTest --givenname SARA --surname ServiceUser
 ```
@@ -167,8 +170,6 @@ After that, we need to create groups and configure permissions. You will need to
 * for the two `Research Data` collections allow submissions for both `DSpace User` and `SARA User`
 * for one `Publication` collection allow submissions for `DSpace User` group only
 * for the other `Publication` collection allow submissions for `SARA User` group only
-
-<sup>*</sup>this is the dedicated SARA Service user and needs to have permissions to submit to any collection a SARA user has access to! You can even use a non-existing email address since you are admin.
 
 ### Validate Swordv2 functionality (HTTP)
 
