@@ -19,9 +19,13 @@ In case of questions please contact:
 ## Setup 
 
 ### Connect to the machine using your credentials (ssh, putty)
+Please use the credentials handed out to you, e.g.
+
+Linux/MacOS:
 ```bash
-ssh ubuntu@HOSTNAME
+ssh ubuntu@vm-XXX-XXX.bwcloud.uni-ulm.de
 ```
+Windows: Download [putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) and install it
 
 ## Get Resources
 ```bash
@@ -86,9 +90,9 @@ sudo -H -u dspace -- sh -c 'cd /tmp/dspace-src/dspace/target/dspace-installer; a
 ```
 ```bash
 # export admins email = it is used by the script to create the bibliography, too
-export ADMIN_EMAIL="katakombi@gmail.com"
+export ADMIN_EMAIL="dspace-admin@notexisting.com"
 # Create dspace admin
-sudo -u dspace /dspace/bin/dspace create-administrator -e $ADMIN_EMAIL -f "kata" -l "kombi" -p "iamthebest" -c en
+sudo -u dspace /dspace/bin/dspace create-administrator -e $ADMIN_EMAIL -f "Super" -l "User" -p "iamthebest" -c en
 ```
 
 ### Apply presets
@@ -130,7 +134,7 @@ sudo systemctl enable tomcat
 ```
 
 ### Test your instance
-Please visit a web page of the DSpace server: http://vm-XXX-XXX.bwcloud.uni-ulm.de:8080/xmlui
+Open the start page of your DSpace server: http://vm-XXX-XXX.bwcloud.uni-ulm.de:8080/xmlui
 You should be able to login with your admin account.
 
 ## Configuration
@@ -141,25 +145,31 @@ Now create a bunch of default users and a community/collection structure:
 cd /home/ubuntu/DSpace-Setup && ./dspace-init.sh
 ```
 After that, we need to configure permissions. You will need to login as admin using the DSpace UI: 
-* create a group called `SARA User` and add `project-sara@uni-konstanz.de`<sup>1</sup>
+* create a group called `SARA User` and add `project-sara@uni-konstanz.de`<sup>*</sup>
 * create a group called `DSpace User` and add some users. 
 * for each collection: 
   * allow submissions for `DSpace User`
   * if `Research Data`: allow submissions for `SARA User`
   * Add a role -> `Accept/Reject/Edit Metadata Step` -> add `Reviewer`
 
-<sup>1</sup>this is the dedicated SARA Service user and needs to have permissions to submit to any collection a SARA user has access to! You can even use a non-existing email address since you won't need access.
+<sup>*</sup>this is the dedicated SARA Service user and needs to have permissions to submit to any collection a SARA user has access to! You can even use a non-existing email address since you are admin.
 
 ### Validate Swordv2/Rest functionality (HTTP)
+
+Now we check whether the Sword Interface is configured properly and a valid ServiceDocument is being delivered.
+We distinguish three cases
+*USER1* is registered and has access to at least one collection
+*USER2* is registered but has no access to any collection
+*USER3* is not registered at all
 
 ```bash
 DSPACE_SERVER="$(hostname):8080"
 
 SARA_USER="project-sara@uni-konstanz.de"
 SARA_PWD="SaraTest"
-USER1="stefan.kombrink@uni-ulm.de" # set existing SARA User
+USER1="demo-user@uni-ulm.de" # set existing SARA User
 USER2="demo-user-noaccess@sara-service.org" # set existing user without any permissions
-USER3="daniel.duesentrieb@uni-entenhausen.de" # set nonexisting user
+USER3="daniel.duesentrieb@entenhausen.de" # set nonexisting user
 
 curl -H "on-behalf-of: $USER1" -i $DSPACE_SERVER/swordv2/servicedocument --user "$SARA_USER:$SARA_PWD"  # => downloads TermsOfServices for all available collections
 curl -H "on-behalf-of: $USER2" -i $DSPACE_SERVER/swordv2/servicedocument --user "$SARA_USER:$SARA_PWD"  # => downloads empty service document
@@ -227,12 +237,14 @@ sudo service tomcat restart
 
 ### Validate Swordv2/Rest functionality (HTTPS)
 
+Experience shows that many things can break while setting up apache+SSL hence we will repeat the previous checks.
+
 ```bash
 DSPACE_SERVER="https://$(hostname)"
 
 SARA_USER="project-sara@uni-konstanz.de"
 SARA_PWD="SaraTest"
-USER1="stefan.kombrink@uni-ulm.de" # set existing SARA User
+USER1="demo-user@uni-ulm.de" # set existing SARA User
 USER2="demo-user-noaccess@sara-service.org" # set existing user without any permissions
 USER3="daniel.duesentrieb@uni-entenhausen.de" # set nonexisting user
 
@@ -244,81 +256,3 @@ curl -H "on-behalf-of: $USER3" -i $DSPACE_SERVER/swordv2/servicedocument --user 
 curl -s -H "Accept: application/json" $DSPACE_SERVER/rest/hierarchy | python -m json.tool
 # This should dump the bibliography structure. In case of `No JSON object could be decoded` something is wrong.
 ```
-
-## Final steps
-
-### Stability optimizations
-Append `kernel.panic = 30` to `/etc/sysctl.conf`
-
-```bash
-sudo vim /etc/sysctl.conf
-sudo sysctl -p /etc/sysctl.conf
-```
-This will perform an automatic reboot 30 seconds after a kernel panic has occurred.
-
-### Securing SwordV2 Interface
-Here we use DSpace with SwordV2 and on-behalf-of enabled. Without further configuration the following scenarios are possible:
-* A registered user can submit items on-behalf-of others users if he knows their email addresses used for registration. Items can be submitted to collections where both users have submit rights to.
-* In case the SARA Service users name and password get leaked even no registration is needed.
-* The interface can be flooded with automated requests leading to high server load.
-
-We propose two solutions to prevent these scenarios:
-
-1) Block requests except for SARA Service in Apache
-
-Do `sudo a2enmod authn_anon` and replace `ProxyPass /swordv2 ajp://localhost:8009/swordv2` by the following code snippet:
-
-```bash
-sudo vim /etc/apache2/sites-enabled/000-default-le-ssl.conf
-```
-
-```apache
-<Location /swordv2>
-    ProxyPass ajp://localhost:8009/swordv2
-    # allow only whitelisted usernames
-    AuthType Basic
-    AuthName "SWORD v2 endpoint"
-    Require user project-sara@uni-konstanz.de
-    # but don't actually check the password:
-    # DSpace does that anyway, and storing passwords twice is silly
-    AuthBasicProvider anon
-    Anonymous *
-</Location>
-```
-
-**IMPORTANT: double check that the ProxyPass and ProxyPassReverse with `/xmlui` occur at the very end or else the `/swordv2` rule is not going to be applied!**
-**Best thing is to re-test SwordV2 using the curl commands from the previous sections!**
-
-This has Apache do authZ (the username whitelisting) only, and lets DSpace do authN (checking the password)
-so the password doesn't have to be kept in sync between Apache and DSpace config.
-
-If you need to whitelist extra users, add them to the end of the `Require user` line.
-To whitelist entire hosts (not recommended except for 127.0.0.1), add something like
-`Require host 127.0.0.1` to the `<Location>` block
-(`Require` rules are implicitly ORed unless they are in a `<RequireAll>` block).
-
-2) Patch Source for DSpace & rebuild
-We provide two patches that restrict the on-Behalf-of submission on a list of well-defined users.
-
-https://github.com/54r4/DSpace/tree/dspace-6.3_OboFixVariant1
-https://github.com/54r4/DSpace/tree/dspace-6.3_OboFixVariant2
-
-It is preferrable to adapt 1) or 1) and 2).
-
-*TODO Source build and install*
-
-### Free up disk space
-```bash
-du -hs /tmp/dspace-6.?-src-release
-#4,2G	dspace-6.3-src-release
-sudo rm -rf /tmp/dspace-6.?-src-release
-```
-
-### Close ports
-
-Now you can login the bwCloud user interface and disable the tomcat ports 8080/8443 for better security!
-Also, in Tomcat's `server.xml`, change all `<Connector>`s to add `address="127.0.0.1"`. Better save than sorry.
-
-### Troubleshooting
-`ant install` throws an exception because it is unhappy to not find a `local.cfg`. This seemingly has no bad side effect although it couln't hurt to fix that...
-
