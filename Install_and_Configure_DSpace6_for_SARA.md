@@ -35,8 +35,9 @@ git clone https://github.com/sara-service/workshop.git
 ## Installation
 
 ```bash
+sudo apt-mark hold openjdk-11-jre-headless # do NOT install java 11
 sudo apt-get update && sudo apt-get -y upgrade
-sudo apt-get -y install python openjdk-8-jdk maven ant postgresql postgresql-contrib curl wget haveged ruby-compass ruby-sass
+sudo apt-get -y install openjdk-8-jdk maven ant postgresql postgresql-contrib curl wget haveged ruby-compass ruby-sass
 ```
 
 ### Postgres
