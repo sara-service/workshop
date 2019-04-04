@@ -168,22 +168,22 @@ sudo /dspace/bin/dspace user --add --email demo-user@sara-service.org --password
 sudo /dspace/bin/dspace user --add --email demo-user-noaccess@sara-service.org --password SaraTest --givenname Demo --surname Loser
 ```
 
-After that, we need to create groups and configure permissions. You will need to login as admin using the DSpace UI: 
+After that, we need to create groups and configure permissions. You will need to login with `$ADMIN_EMAIL` using the DSpace UI: 
 * create a group called `SARA User` and add `project-sara@uni-konstanz.de`
 * create a group called `DSpace User` and add `demo-user@sara-service.org`
 * for the two `Research Data` collections allow submissions for both `DSpace User` and `SARA User`
-* for one `Publication` collection allow submissions for `DSpace User` only
-* for the other `Publication` collection allow submissions for `SARA User` only
+* for one `Publication` collection allow submissions for `DSpace User` group only
+* for the other `Publication` collection allow submissions for `SARA User` group only
 
 <sup>*</sup>this is the dedicated SARA Service user and needs to have permissions to submit to any collection a SARA user has access to! You can even use a non-existing email address since you are admin.
 
 ### Validate Swordv2 functionality (HTTP)
 
 Now we check whether the Sword Interface is configured properly and a valid ServiceDocument is being delivered.
-We distinguish three cases
-*USER1* is registered and has access to at least one collection
-*USER2* is registered but has no access to any collection
-*USER3* is not registered at all
+We distinguish three cases:
+* *USER1* is registered and has access to at least one collection
+* *USER2* is registered but has no access to any collection
+* *USER3* is not registered at all
 
 ```bash
 DSPACE_SERVER="$(hostname):8080"
