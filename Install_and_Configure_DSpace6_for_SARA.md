@@ -134,6 +134,9 @@ sudo systemctl enable tomcat
 ```
 
 ### Test your instance
+```bash
+hostname # this is your DSpace hostname!
+```
 Open the start page of your DSpace server: http://vm-XXX-XXX.bwcloud.uni-ulm.de:8080/xmlui
 You should be able to login with your admin account.
 
