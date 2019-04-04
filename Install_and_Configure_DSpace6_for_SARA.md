@@ -56,8 +56,8 @@ sudo -u postgres psql dspace -c "CREATE EXTENSION pgcrypto;"
 wget http://archive.apache.org/dist/tomcat/tomcat-8/v8.5.32/bin/apache-tomcat-8.5.32.tar.gz -O /tmp/tomcat.tgz
 sudo mkdir /opt/tomcat
 sudo tar xzvf /tmp/tomcat.tgz -C /opt/tomcat --strip-components=1
-sudo cp /home/ubuntu/workshop/DSpace/config/tomcat/tomcat.service /etc/systemd/system/tomcat.service
-sudo cp /home/ubuntu/workshop/DSpace/config/tomcat/server.xml /opt/tomcat/conf/server.xml
+sudo cp ~/workshop/DSpace/config/tomcat/tomcat.service /etc/systemd/system/tomcat.service
+sudo cp ~/workshop/DSpace/config/tomcat/server.xml /opt/tomcat/conf/server.xml
 sudo chown -R dspace.dspace /opt/tomcat
 sudo systemctl daemon-reload
 sudo systemctl start tomcat
@@ -99,29 +99,29 @@ sudo -u dspace /dspace/bin/dspace create-administrator -e $ADMIN_EMAIL -f "Super
 
 ```bash
 # Enable Mirage2 Themes
-cat /home/ubuntu/workshop/DSpace/config/xmlui.xconf             | sudo -u dspace sh -c 'cat > /dspace/config/xmlui.xconf'
+cat ~/workshop/DSpace/config/xmlui.xconf             | sudo -u dspace sh -c 'cat > /dspace/config/xmlui.xconf'
 # Apply customized item submission form
-cat /home/ubuntu/workshop/DSpace/config/item-submission.xml     | sudo -u dspace sh -c 'cat > /dspace/config/item-submission.xml'
-cat /home/ubuntu/workshop/DSpace/config/input-forms.xml         | sudo -u dspace sh -c 'cat > /dspace/config/input-forms.xml'
+cat ~/workshop/DSpace/config/item-submission.xml     | sudo -u dspace sh -c 'cat > /dspace/config/item-submission.xml'
+cat ~/workshop/DSpace/config/input-forms.xml         | sudo -u dspace sh -c 'cat > /dspace/config/input-forms.xml'
 # Custom item view
-cat /home/ubuntu/workshop/DSpace/config/xmlui/item-view.xsl     | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/themes/Mirage2/xsl/aspect/artifactbrowser/item-view.xsl'
+cat ~/workshop/DSpace/config/xmlui/item-view.xsl     | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/themes/Mirage2/xsl/aspect/artifactbrowser/item-view.xsl'
 # Custom messages
-cat /home/ubuntu/workshop/DSpace/config/xmlui/messages.xml      | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/i18n/messages.xml'
-cat /home/ubuntu/workshop/DSpace/config/xmlui/messages_de.xml   | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/i18n/messages_de.xml'
+cat ~/workshop/DSpace/config/xmlui/messages.xml      | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/i18n/messages.xml'
+cat ~/workshop/DSpace/config/xmlui/messages_de.xml   | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/i18n/messages_de.xml'
 # Custom landing page
-cat /home/ubuntu/workshop/DSpace/config/xmlui/news-xmlui.xml    | sudo -u dspace sh -c 'cat > /dspace/config/news-xmlui.xml'
+cat ~/workshop/DSpace/config/xmlui/news-xmlui.xml    | sudo -u dspace sh -c 'cat > /dspace/config/news-xmlui.xml'
 # Custom thumbnails
-cat /home/ubuntu/workshop/DSpace/config/xmlui/Logo_SARA_RGB.png | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/themes/Mirage2/images/Logo_SARA_RGB.png'
+cat ~/workshop/DSpace/config/xmlui/Logo_SARA_RGB.png | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/themes/Mirage2/images/Logo_SARA_RGB.png'
 # Custom icons
-cat /home/ubuntu/workshop/DSpace/config/xmlui/arrow.png         | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/themes/Mirage2/images/arrow.png'
+cat ~/workshop/DSpace/config/xmlui/arrow.png         | sudo -u dspace sh -c 'cat > /dspace/webapps/xmlui/themes/Mirage2/images/arrow.png'
 # Copy email templates
-sudo cp /home/ubuntu/workshop/DSpace/config/emails/* /dspace/config/emails/
+sudo cp ~/workshop/DSpace/config/emails/* /dspace/config/emails/
 sudo chown -R dspace /dspace/config/emails
 sudo chgrp -R dspace /dspace/config/emails
 # Apply custom local configurations
-cat /home/ubuntu/workshop/DSpace/config/local.cfg | sed 's/devel-dspace.sara-service.org/'$(hostname)'/g' | sudo -u dspace tee /dspace/config/local.cfg
+cat ~/workshop/DSpace/config/local.cfg | sed 's/devel-dspace.sara-service.org/'$(hostname)'/g' | sudo -u dspace tee /dspace/config/local.cfg
 # Apply default deposit license
-cat /home/ubuntu/workshop/DSpace/config/default.license | sudo -u dspace tee /dspace/config/default.license
+cat ~/workshop/DSpace/config/default.license | sudo -u dspace tee /dspace/config/default.license
 ```
 ```bash
 # Copy all webapps from dspace to tomcat
