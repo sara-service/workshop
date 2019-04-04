@@ -270,3 +270,5 @@ curl -H "on-behalf-of: $USER1" -i $DSPACE_SERVER/swordv2/servicedocument --user 
 curl -H "on-behalf-of: $USER2" -i $DSPACE_SERVER/swordv2/servicedocument --user "$SARA_USER:$SARA_PWD"  # => downloads empty service document
 curl -H "on-behalf-of: $USER3" -i $DSPACE_SERVER/swordv2/servicedocument --user "$SARA_USER:$SARA_PWD"  # => HTML Error Status 403: Forbidden
 ```
+
+Congratulations, you are done!
