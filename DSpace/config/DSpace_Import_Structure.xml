@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<import_structure>
+  <community>
+    <name>Faculty of Education</name>
+    <!--
+    <description></description>
+    <intro></intro>
+    <copyright></copyright>
+    <sidebar></sidebar>
+    -->
+    <collection>
+      <name>Publications</name>
+      <!--
+      <description></description>
+      <intro></intro>
+      <copyright></copyright>
+      <sidebar></sidebar>
+      <license></license>
+      <provenance></provenance>
+      -->
+    </collection>
+    <collection>
+      <name>Research data</name>
+    </collection>
+  </community>
+  <community>
+    <name>Faculty of Science and Technology</name>
+    <collection>
+      <name>Publications</name>
+    </collection>
+    <collection>
+      <name>Research data</name>
+    </collection>
+  </community>
+</import_structure>
