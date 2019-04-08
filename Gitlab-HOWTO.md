@@ -44,4 +44,6 @@ nginx['ssl_certificate'] = "/etc/letsencrypt/live/gitlabdomain/fullchain.pem"
 nginx['ssl_certificate_key'] = "/etc/letsencrypt/live/gitlabdomain/privkey.pem"
 nginx['custom_gitlab_server_config'] = "location ^~ /.well-known { root /var/www/letsencrypt; }"
 ```
-* reconfigure and restart gitlab again (sudo gitlab-ctl reconfigure && sudo gitlab-ctl restart)
+* reconfigure and restart gitlab again: `sudo gitlab-ctl reconfigure && sudo gitlab-ctl restart`
+
+Congratulations, you are done!
