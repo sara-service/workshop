@@ -30,7 +30,7 @@ Yes, that's the official method :(
 
 * in `/etc/gitlab/gitlab.rb`, set variables as follows (unless you need other things, that's actually the entire config!)
 ```
-external_url 'http://gitlabdomain' # note http://; no SSL yet!
+external_url 'http://$(hostname)' # note http://; no SSL yet!
 nginx['custom_gitlab_server_config'] = "location ^~ /.well-known { root /var/www/letsencrypt; }"
 ```
 
@@ -44,19 +44,4 @@ nginx['ssl_certificate'] = "/etc/letsencrypt/live/gitlabdomain/fullchain.pem"
 nginx['ssl_certificate_key'] = "/etc/letsencrypt/live/gitlabdomain/privkey.pem"
 nginx['custom_gitlab_server_config'] = "location ^~ /.well-known { root /var/www/letsencrypt; }"
 ```
-
-* highly recommended: go to https://mozilla.github.io/server-side-tls/ssl-config-generator/ and add something like this as well:
-```
-nginx['ssl_protocols'] = "TLSv1.2";
-nginx['ssl_ciphers'] = "CIPHER-LIST:GOES-HERE"
-nginx['ssl_prefer_server_ciphers'] = "on"
-nginx['hsts_max_age'] = 15768000
-```
 * reconfigure and restart gitlab again (sudo gitlab-ctl reconfigure && sudo gitlab-ctl restart)
-* visit `https://www.ssllabs.com/ssltest/analyze.html?d=$(hostname)` and verify you get an A or A+
-* set up periodic renewal: create /etc/cron.d/letsencrypt containing
-
-```
-15 3 * * * root /usr/bin/letsencrypt renew && gitlab-ctl restart nginx
-```
-occasionally re-check the config generator
