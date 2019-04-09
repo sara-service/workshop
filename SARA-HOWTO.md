@@ -19,6 +19,7 @@ In case of questions please contact:
 You will need
 * a DSpace-Repository
 * an Archive GitLab
+* an Ubuntu VM with 2G of RAM
 
 You might want a GitLab as source.
 Alternatively you can use GitHub.
