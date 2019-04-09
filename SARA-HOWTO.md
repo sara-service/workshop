@@ -34,6 +34,7 @@ Windows: Download [putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/lat
 
 ## Get Resources
 ```bash
+git clone https://git.uni-konstanz.de/sara/sara-for-workshop-with-submodules
 git clone https://github.com/sara-service/workshop.git
 ```
 
