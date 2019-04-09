@@ -17,9 +17,11 @@ In case of questions please contact:
 ## Requirements
 
 You will need
-* a Source GitLab or GitHub
 * a DSpace-Repository
 * an Archive GitLab
+
+You might want a GitLab as source.
+Alternatively you can use GitHub.
 
 ## Setup 
 
