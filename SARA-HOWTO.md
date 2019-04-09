@@ -34,74 +34,12 @@ Windows: Download [putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/lat
 
 ## Get Resources
 ```bash
-git clone https://git.uni-konstanz.de/sara/sara-for-workshop-with-submodules
+cd $HOME
+
+# SARA source code
+git clone https://git.uni-konstanz.de/sara/sara-for-workshop-with-submodules SARA-server
+# Workshop materials
 git clone https://github.com/sara-service/workshop.git
-```
-
-
-## Setup 
-
-### Create a virtual machine (e.g. an instance on the bwCloud):
-
-  * https://portal.bw-cloud.org
-  * Compute -> Instances -> Start new instance
-  * Use "Ubuntu Server 18.04 Minimal" image
-  * Use flavor "m1.medium" with 12GB disk space and 4GB RAM
-  * Enable port 8080 egress/ingress by creating and enabling a new Security Group 'tomcat'
-  * Enable port 80/443 egress/ingress by creating and enabling a new Security Group 'apache'
-
-### In case you have an running instance already which you would like to replace
-
- * https://portal.bw-cloud.org
- * Compute -> Instances -> "sara-server" -> [Rebuild Instance]
- * You might need to remove your old SSH key from ~/.ssh/known_hosts
- 
- ### Setup DNS
- * create a DNS record for your machine, here: `ulm.sara-service.org`
-
-### Connect to the machine
-```bash
-ssh ubuntu@ulm.sara-service.org
-```
-
-## Fix hostname
-```bash
-# Enable history search (pgdn/pgup)
-sudo sed -i.orig '41,+1s/^# //' /etc/inputrc
-
-# Adapt host name
-sudo hostname ulm.sara-service.org
-
-# Log off to apply new host name
-exit
-```
-
-## Prerequisites
-```bash
-ssh -A ubuntu@ulm.sara-service.org
-
-# Fetch latest updates
-sudo apt-get update
-
-# Install some important dependencies
-sudo apt-get -y install vim git locales rsync
-
-# Fix locales
-sudo locale-gen de_DE.UTF-8 en_US.UTF-8
-sudo localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
-
-# Fix timezone
-sudo sh -c 'echo "Europe/Berlin" > /etc/timezone'
-sudo DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get install tzdata
-
-# Upgrade all packages
-sudo apt-get -y upgrade
-```
-```bash
-# Clone Sara Server code from git
-# FIXME this has to work with https:// and gain access to the private repo credentials
-git clone -b master git@git.uni-konstanz.de:sara/SARA-server.git
-cd SARA-server && git submodule update --init
 ```
 
 ## Installation
@@ -112,17 +50,16 @@ sudo systemctl start postgresql
 sudo -u postgres createuser -l -D -R -S sara
 sudo -u postgres psql -c "ALTER USER sara WITH PASSWORD 'secret';"
 sudo -u postgres createdb -E UTF8 -O sara sara
+
 sudo -u postgres psql -d sara -f ~/SARA-server/saradb/adminconfig.sql
 sudo -u postgres psql -d sara -f ~/SARA-server/saradb/schema.sql
 sed "s/__USERNAME__/sara/g" ~/SARA-server/saradb/permissions.sql | sudo -u postgres psql -d sara
 sudo -u postgres psql -d sara -f ~/SARA-server/saradb/licenses.sql
 ```
-Create configuration according to `saradb/ulm` subdirectory
-```bash
-# TODO insert IOMI credentials here!!!
+```
 DBBASEDIR="$HOME/SARA-server/saradb"
 for file in $DBBASEDIR/ulm/*.sql; do
-    sed -f $DBBASEDIR/credentials/ulm.sed "$file" | sudo -u postgres psql -v ON_ERROR_STOP=on -d sara -v "basedir=$DBBASEDIR";
+    sed -f $DBBASEDIR/credentials/workshop.sed "$file" | sudo -u postgres psql -v ON_ERROR_STOP=on -d sara -v "basedir=$DBBASEDIR";
 done
 ```
 
