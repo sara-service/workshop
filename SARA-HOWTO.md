@@ -190,16 +190,41 @@ sudo -u tomcat8 cp ~/.m2/repository/org/apache/geronimo/javamail/geronimo-javama
 # copy and adjust config
 sudo  cp src/main/webapp/META-INF/context.xml /etc/tomcat8/Catalina/localhost/SaraServer.xml
 sudo sed -i 's/demo.sara-project.org/'$(hostname)'/' /etc/tomcat8/Catalina/localhost/SaraServer.xml
-vim /etc/tomcat8/Catalina/localhost/SaraServer.xml # set email auth pwd
 # launch service
 sudo service tomcat8 restart
 ```
+## Test
+
+We should see the SARA landing page on https://$(hostname).
+It says "Error loading list!" because nothing is configured yet.
+
 ## Configuration
 
-TODO...
+### Credentials for EMail verification
+Edit `SaraServer.xml` to set proper email auth credentials: 
+```
+vim /etc/tomcat8/Catalina/localhost/SaraServer.xml
+```
+
+### Tokens/credentials/passwords for the rest
+You will find the main configuration under `~/SARA-server/saradb/workshop`
+```
+demo-dspace.sql
+demo-github.sql
+demo-gitlab.sql
+demo-archiv.sql
+```
+Each snippet defines settings for integrated source and archives and repositories.
+Now edit `workshop.sed` and put in there the confidential data:
+```
+vim ~/SARA-server/saradb/credentials/workshop.sed
+```
+Now we are going to apply the configuration.
 ```
 DBBASEDIR="$HOME/SARA-server/saradb"
 for file in $DBBASEDIR/workshop/*.sql; do
     sed -f $DBBASEDIR/credentials/workshop.sed "$file" | sudo -u postgres psql -v ON_ERROR_STOP=on -d sara -v "basedir=$DBBASEDIR";
 done
 ```
+You are done!
+Reloading https://$(hostname) should yield in a working SARA server instance.
