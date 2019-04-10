@@ -60,7 +60,7 @@ sudo -u postgres psql -d sara -f ~/SARA-server/saradb/licenses.sql
 ```
 ```
 DBBASEDIR="$HOME/SARA-server/saradb"
-for file in $DBBASEDIR/ulm/*.sql; do
+for file in $DBBASEDIR/workshop/*.sql; do
     sed -f $DBBASEDIR/credentials/workshop.sed "$file" | sudo -u postgres psql -v ON_ERROR_STOP=on -d sara -v "basedir=$DBBASEDIR";
 done
 ```
