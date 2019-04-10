@@ -209,10 +209,11 @@ vim /etc/tomcat8/Catalina/localhost/SaraServer.xml
 ### Tokens/credentials/passwords for the rest
 You will find the main configuration under `~/SARA-server/saradb/workshop`
 ```
-demo-dspace.sql
-demo-github.sql
-demo-gitlab.sql
-demo-archiv.sql
+~/SARA-server/saradb/workshop
+vim demo-dspace.sql
+vim demo-github.sql
+vim demo-gitlab.sql
+vim demo-archiv.sql
 ```
 Each snippet defines settings for integrated source and archives and repositories.
 Now edit `workshop.sed` and put in there the confidential data:
@@ -226,5 +227,5 @@ for file in $DBBASEDIR/workshop/*.sql; do
     sed -f $DBBASEDIR/credentials/workshop.sed "$file" | sudo -u postgres psql -v ON_ERROR_STOP=on -d sara -v "basedir=$DBBASEDIR";
 done
 ```
-You are done!
+Congratulations, you are done!
 Reloading https://$(hostname) should yield in a working SARA server instance.
