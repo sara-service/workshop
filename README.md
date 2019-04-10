@@ -8,8 +8,8 @@ https://demo.sara-service.org
 
 You will find documentation how to install SARA Server and its dependencies
 
-* [SARA Setup](https://github.com/sara-service/workshop/blob/master/SARA-HOWTO.md)
-* [DSpace6 Setup](https://github.com/sara-service/workshop/blob/master/DSpace4SARA-HOWTO.md)
+* [SARA Setup](SARA-HOWTO.md)
+* [DSpace6 Setup](DSpace4SARA-HOWTO.md)
 * [GitLab Installation](Gitlab-HOWTO.md)
 
 ## Not required for this workshop
