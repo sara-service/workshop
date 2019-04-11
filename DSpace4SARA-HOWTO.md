@@ -168,8 +168,8 @@ After that, we need to create groups and configure permissions. You will need to
 * create a group called `SARA User` and add `project-sara@uni-konstanz.de`
 * create a group called `DSpace User` and add `demo-user@sara-service.org`
 * for the two `Research Data` collections allow submissions for both `DSpace User` and `SARA User`
-* for one `Publication` collection allow submissions for `DSpace User` group only
-* for the other `Publication` collection allow submissions for `SARA User` group only
+* for `Faculty of Education -> Publication` do nothing
+* for `Faculty of Science and Technology -> Publication` collection allow submissions for `SARA User` group only
 
 ### Validate Swordv2 functionality (HTTP)
 
