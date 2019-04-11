@@ -44,6 +44,12 @@ git clone https://git.uni-konstanz.de/sara/sara-for-workshop-with-submodules SAR
 git clone https://github.com/sara-service/workshop.git
 ```
 
+## Editor to use
+If you want to use nano instead of vim you can use this alias
+```
+alias vim=nano
+```
+
 ## Installation
 ### Postgres
 ```bash
