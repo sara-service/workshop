@@ -196,6 +196,10 @@ sudo service tomcat8 restart
 ## Test
 
 We should see the SARA landing page on https://$(hostname).
+
+<p align="center">
+  <img src="SARA-unconfigured.png?raw=true" alt="screen shot asd lifeforce"/>
+</p>
 It says "Error loading list!" because nothing is configured yet.
 
 ## Configuration
