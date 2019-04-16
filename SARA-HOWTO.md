@@ -42,18 +42,20 @@ cd $HOME
 git clone https://git.uni-konstanz.de/sara/sara-for-workshop-with-submodules SARA-server
 # Workshop materials
 git clone https://github.com/sara-service/workshop.git
+
 ```
 
 ## Editor to use
 If you want to use nano instead of vim you can use this alias
 ```
 alias vim=nano
+
 ```
 
 ## Installation
 ### Postgres
 ```bash
-sudo apt-get install postgresql
+sudo apt-get -y install postgresql
 sudo systemctl start postgresql
 sudo -u postgres createuser -l -D -R -S sara
 sudo -u postgres psql -c "ALTER USER sara WITH PASSWORD 'secret';"
@@ -63,12 +65,14 @@ sudo -u postgres psql -d sara -f ~/SARA-server/saradb/adminconfig.sql
 sudo -u postgres psql -d sara -f ~/SARA-server/saradb/schema.sql
 sed "s/__USERNAME__/sara/g" ~/SARA-server/saradb/permissions.sql | sudo -u postgres psql -d sara
 sudo -u postgres psql -d sara -f ~/SARA-server/saradb/licenses.sql
+
 ```
 ### Apache
 ```bash
-sudo apt install apache2 letsencrypt
+sudo apt-get -y install apache2 letsencrypt
 sudo systemctl stop apache2
 HN=$(hostname -f)
+
 ```
 Install Redirect
 ```bash
@@ -86,6 +90,7 @@ cat << EOF | sudo tee /etc/apache2/sites-available/redirect.conf
     RedirectPermanent / "https://$HN/"
 </VirtualHost>
 EOF
+
 ```
 Install TomCat Proxy
 ```bash
@@ -139,21 +144,31 @@ cat << EOF | sudo tee /etc/apache2/sites-available/proxy.conf
 	SSLCertificateKeyFile /etc/letsencrypt/live/$HN/privkey.pem
 </VirtualHost>
 EOF
+
 ```
 ```bash
 sudo mkdir -p /var/www/letsencrypt
+
+```
+```bash
 sudo letsencrypt certonly --standalone -w /var/www/letsencrypt -d $HN
+
+```
+```bash
 sudo a2dissite 000-default
 sudo a2enmod proxy_ajp ssl headers
 sudo a2ensite redirect proxy
 sudo systemctl restart apache2
+
 ```
 
 ### Tomcat
 ```bash
 sudo apt-mark hold openjdk-11-jre-headless
-sudo apt-get install openjdk-8-jdk tomcat8 maven haveged
+sudo apt-get -y install openjdk-8-jdk tomcat8 maven haveged
 
+```
+```bash
 cat << EOF | sudo tee /etc/tomcat8/server.xml
 <?xml version='1.0' encoding='utf-8'?>
 <Server port="8005" shutdown="SHUTDOWN">
@@ -180,6 +195,7 @@ cat << EOF | sudo tee /etc/tomcat8/server.xml
   </Service>
 </Server>
 EOF
+
 ```
 
 ### SARA Server
@@ -188,14 +204,17 @@ EOF
 cd ~/SARA-server
 mvn clean package -DskipTests
 sudo -u tomcat8 cp target/SaraServer-*.war /var/lib/tomcat8/webapps/SaraServer.war
+
 # copy some dependencies manually
 sudo -u tomcat8 cp ~/.m2/repository/org/postgresql/postgresql/42.1.4/postgresql-42.1.4.jar /var/lib/tomcat8/lib
 sudo -u tomcat8 cp ~/.m2/repository/org/apache/geronimo/specs/geronimo-javamail_1.4_spec/1.6/geronimo-javamail_1.4_spec-1.6.jar /var/lib/tomcat8/lib
 sudo -u tomcat8 cp ~/.m2/repository/org/apache/geronimo/specs/geronimo-activation_1.0.2_spec/1.1/geronimo-activation_1.0.2_spec-1.1.jar /var/lib/tomcat8/lib/
 sudo -u tomcat8 cp ~/.m2/repository/org/apache/geronimo/javamail/geronimo-javamail_1.4_provider/1.6/geronimo-javamail_1.4_provider-1.6.jar /var/lib/tomcat8/lib
+
 # copy and adjust config
 sudo  cp src/main/webapp/META-INF/context.xml /etc/tomcat8/Catalina/localhost/SaraServer.xml
 sudo sed -i 's/demo.sara-project.org/'$(hostname)'/' /etc/tomcat8/Catalina/localhost/SaraServer.xml
+
 # launch service
 sudo service tomcat8 restart
 ```
@@ -213,7 +232,7 @@ It says "Error loading list!" because nothing is configured yet.
 ### Credentials for EMail verification
 Edit `SaraServer.xml` to set proper email auth credentials: 
 ```
-vim /etc/tomcat8/Catalina/localhost/SaraServer.xml
+sudo vim /etc/tomcat8/Catalina/localhost/SaraServer.xml
 ```
 
 ### Tokens/credentials/passwords for the rest
